@@ -2,6 +2,9 @@
 
 namespace PUGX\FlashForward\Media\SWF\Tag;
 
+use PUGX\FlashForward\Media\SVG;
+use PUGX\FlashForward\Media\SWF\Parser;
+use PUGX\FlashForward\Media\SWF\SVGUtill;
 use PUGX\FlashForward\Media\SWF\Tag;
 
 class DisplayObjectContainer extends Tag
@@ -65,13 +68,13 @@ class DisplayObjectContainer extends Tag
     return $object->getCharacterId();
   }
 
-  public function parse($reader)
+  public function parse(Parser $reader)
   {
     while (true) {
       $cl = $reader->getCodeAndLength();
-      $class = "Media_SWF_Tag_".Media_SWF_Tag::name($cl['Code']);
+      $class = Tag::name($cl['Code']);
       if (!class_exists($class)) {
-        $class = 'Media_SWF_Tag';
+        $class = 'Tag';
       }
       $tag = new $class($cl['Code'], $cl['Length'], $cl['LongFormat'], $reader, $this->root);
       $this->_tags[] = $tag;
@@ -109,7 +112,7 @@ class DisplayObjectContainer extends Tag
 
   public function build()
   {
-    $writer = new Media_SWF_Parser();
+    $writer = new Parser();
     foreach ($this->_tags as $tag) {
       $tag->write($writer);
     }
@@ -119,26 +122,26 @@ class DisplayObjectContainer extends Tag
   public function convertSVG()
   {
     $id = $this->getElementIdString();
-    $svg = Media_SVG::newElement('Group');
+    $svg = SVG::newElement('Group');
     $svg->set('id', $id);
     $frame = 0;
     $display_stack = array();
     foreach ($this->_tags as $tag) {
       switch ($tag->getCode()) {
-        case Media_SWF_Tag::PLACE_OBJECT:
-        case Media_SWF_Tag::PLACE_OBJECT2:
-        case Media_SWF_Tag::PLACE_OBJECT3:
+        case Tag::PLACE_OBJECT:
+        case Tag::PLACE_OBJECT2:
+        case Tag::PLACE_OBJECT3:
           $depth       = $tag->getField('Depth');
           $characterId = $tag->getField('CharacterId');
           if ($characterId) {
             $id = $this->root->getTagByCharacterId($characterId)->getElementIdString();
-            $node = Media_SVG::newElement('use');
+            $node = SVG::newElement('use');
             $node->set('href', "url(#$id)");
           } else {
             $node = $display_stack[$depth];
           }
           if ($tag->hasField('Matrix')) {
-            $node->set('transform', Media_SWF_SVGUtill::matrixToSVGTransform($tag->getField('Matrix')));
+            $node->set('transform', SVGUtill::matrixToSVGTransform($tag->getField('Matrix')));
           }
           if ($tag->hasField('ColorTransform')) {
             $cxform = $tag->getField('ColorTransform');
@@ -148,16 +151,16 @@ class DisplayObjectContainer extends Tag
           }
           $display_stack[$depth] = $node;
           break;
-        case Media_SWF_Tag::REMOVE_OBJECT:
-        case Media_SWF_Tag::REMOVE_OBJECT2:
+        case Tag::REMOVE_OBJECT:
+        case Tag::REMOVE_OBJECT2:
           // SVGでは何もしない
           $depth = $tag->getField('Depth');
           unset($display_stack[$depth]);
           break;
-        case Media_SWF_Tag::SHOW_FRAME:
+        case Tag::SHOW_FRAME:
           $frame++;
           ksort($display_stack);
-          $f = Media_SVG::newElement('Group')->set('id', $id.'_f_'.$frame);
+          $f = SVG::newElement('Group')->set('id', $id.'_f_'.$frame);
           foreach ($display_stack as $depth => $node) {
             $f->addNode(clone $node);
           }
@@ -178,9 +181,9 @@ class DisplayObjectContainer extends Tag
     $remove_stack  = array();
     foreach ($this->_tags as $tag) {
       switch ($tag->getCode()) {
-        case Media_SWF_Tag::PLACE_OBJECT:
-        case Media_SWF_Tag::PLACE_OBJECT2:
-        case Media_SWF_Tag::PLACE_OBJECT3:
+        case Tag::PLACE_OBJECT:
+        case Tag::PLACE_OBJECT2:
+        case Tag::PLACE_OBJECT3:
           $depth       = $tag->getField('Depth');
           $characterId = $tag->getField('CharacterId');
           $display     = $display_stack[$depth];
@@ -205,34 +208,34 @@ class DisplayObjectContainer extends Tag
             $display['name'] = $tag->getField('Name');
           }
           if ($tag->hasField('Matrix')) {
-            $matrix = Media_SWF_SVGUtill::matrixToArray($tag->getField('Matrix'));
+            $matrix = SVGUtill::matrixToArray($tag->getField('Matrix'));
             if ($matrix != array(1,0,0,1,0,0)) {
-              $display['mtx'] = Media_SWF_SVGUtill::matrixToArray($tag->getField('Matrix'));
+              $display['mtx'] = SVGUtill::matrixToArray($tag->getField('Matrix'));
             }
           }
           if ($tag->hasField('ColorTransform')) {
             $cxform = $tag->getField('ColorTransform');
-            $display['cx'] = Media_SWF_SVGUtill::cxformToArray($tag->getField('ColorTransform'));
+            $display['cx'] = SVGUtill::cxformToArray($tag->getField('ColorTransform'));
           }
           if ($tag->hasField('ClipDepth')) {
             $display['cdp'] = $tag->getField('ClipDepth');
           }
           $display_stack[$depth] = $display;
           break;
-        case Media_SWF_Tag::REMOVE_OBJECT:
-        case Media_SWF_Tag::REMOVE_OBJECT2:
+        case Tag::REMOVE_OBJECT:
+        case Tag::REMOVE_OBJECT2:
           // SVGでは何もしない
           $depth = $tag->getField('Depth');
           $remove_stack[] = $depth;
           unset($display_stack[$depth]);
           break;
-        case Media_SWF_Tag::DO_ACTION:
+        case Tag::DO_ACTION:
           $actions_stack[] = $tag->convertArray();
           break;
-        case Media_SWF_Tag::FRAME_LABEL:
+        case Tag::FRAME_LABEL:
           $frame_name = $tag->getField('Name');
           break;
-        case Media_SWF_Tag::SHOW_FRAME:
+        case Tag::SHOW_FRAME:
           ++$frame;
           ksort($display_stack);
           $d = array();
@@ -258,12 +261,12 @@ class DisplayObjectContainer extends Tag
           $actions_stack = array();
           $frame_name   = null;
           break;
-        case Media_SWF_Tag::SET_BACKGROUND_COLOR:
+        case Tag::SET_BACKGROUND_COLOR:
           break;
-        case Media_SWF_Tag::END:
+        case Tag::END:
           break;
-        case Media_SWF_Tag::FILE_ATTRIBUTES:
-        case Media_SWF_Tag::METADATA:
+        case Tag::FILE_ATTRIBUTES:
+        case Tag::METADATA:
           break;
         default:
           if (!$tag->isDefinitionTag())
