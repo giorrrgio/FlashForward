@@ -92,10 +92,10 @@ class Element
 
   public function addNode($node)
   {
-    if ($node instanceof Media_SVG_Element)
+    if ($node instanceof Element)
       $this->node[] = $node;
     else 
-      throw new Exception('SVG node must instanceof Media_SVG_Element');
+      throw new \Exception('SVG node must instanceof Element');
 
     return $this;
   }
@@ -103,10 +103,10 @@ class Element
   public function createElement(&$xml = null)
   {
     if ($this->name == null)
-      throw new Exception('SVG Element name isnot set');
+      throw new \Exception('SVG Element name isnot set');
 
     if ($xml == null)
-      $xml = new SimpleXMLElement("<{$this->name}>{$this->value}</{$this->name}>");
+      $xml = new \SimpleXMLElement("<{$this->name}>{$this->value}</{$this->name}>");
 
     foreach ($this->attribute as $attr) {
       if ($this->has($attr)) {
@@ -164,7 +164,7 @@ class Element
     }
 
     foreach ($this->node as $node) {
-      if ($node instanceof Media_SVG_Element)
+      if ($node instanceof Element)
         $node->createElement($xml->addChild($node->getName(), htmlspecialchars($node->getValue())));
     }
   }
@@ -172,7 +172,7 @@ class Element
   public function createArray()
   {
     if ($this->name == null)
-      throw new Exception('SVG Element name isnot set');
+      throw new \Exception('SVG Element name isnot set');
 
     $array = array("t" => $this->name); 
     if ($this->value) {
@@ -195,7 +195,7 @@ class Element
       $array["child"] = array();
     }
     foreach ($this->node as $node) {
-      if ($node instanceof Media_SVG_Element)
+      if ($node instanceof Element)
         $array["child"][] = $node->createArray();
     }
     return $array;

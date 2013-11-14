@@ -1,5 +1,10 @@
 <?php
-class Media_SWF_Viewer extends Media_SWF
+
+namespace PUGX\FlashForward\Media\SWF;
+
+use PUGX\FlashForward\Media\SWF;
+
+class Viewer extends SWF
 {
   public function getVersion()
   {
@@ -39,7 +44,7 @@ class Media_SWF_Viewer extends Media_SWF
     foreach ($this->_tags as $tag) {
       if (isset($tag['CharacterId'])) {
         $defines[] = array(
-          'TagName'     => Media_SWF_Tag::name($tag['Code']),
+          'TagName'     => Tag::name($tag['Code']),
           'Code'        => $tag['Code'],
           'CharacterId' => $tag['CharacterId'],
           'Length'      => $tag['Length'],

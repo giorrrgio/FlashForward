@@ -7,7 +7,8 @@ use PUGX\FlashForward\Media\SWF\Tag\DefineSprite;
 use PUGX\FlashForward\Media\SWF\Tag\DoAction;
 
 /**
- * Media_SWF 
+ *
+ * SWF
  * 
  * IO_SWFからMedia_SWFにして用途にあわせて拡張した
  *
