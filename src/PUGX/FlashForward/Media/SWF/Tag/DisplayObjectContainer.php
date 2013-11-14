@@ -74,7 +74,7 @@ class DisplayObjectContainer extends Tag
       $cl = $reader->getCodeAndLength();
       $class = Tag::name($cl['Code']);
       if (!class_exists($class)) {
-        $class = 'Tag';
+        $class = '\PUGX\FlashForward\Media\SWF\Tag';
       }
       $tag = new $class($cl['Code'], $cl['Length'], $cl['LongFormat'], $reader, $this->root);
       $this->_tags[] = $tag;
