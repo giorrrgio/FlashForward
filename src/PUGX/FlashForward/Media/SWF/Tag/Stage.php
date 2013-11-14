@@ -146,7 +146,7 @@ class Stage extends DisplayObjectContainer
       if ($tag && $tag->isDefinitionTag() && method_exists($tag, 'convertSVG')) {
         $url = $tag->getElementSavedUrl();
         if (!isset($defsList[$url])) {
-          $defsList[$url] = Media_SVG::newElement('defs');
+          $defsList[$url] = SVG::newElement('defs');
         }
         if (in_array($tag->getCode(), $exclude_tags)) {
           continue;

@@ -160,7 +160,7 @@ class DefineShape extends Tag
           break;
       }
     }
-    $elements = array_filter($elements, 'Media_SWF_Tag_DefineShape::hasSVGPath');
+    $elements = array_filter($elements, 'DefineShape::hasSVGPath');
 
     if (count($elements) === 1) {
       $svg_element = array_shift($elements);
@@ -214,7 +214,7 @@ class DefineShape extends Tag
         $g->set('id', $gid);
         $g->set('spreadMethod', $spreadMode[$gradient['SpreadMode']]);
         // TODO GradientMatrixの対応を実装
-        //$g->set('transform', Media_SWF_SVGUtill::matrixToSVGTransform($f['GradientMatrix']));
+        //$g->set('transform', SVGUtill::matrixToSVGTransform($f['GradientMatrix']));
         foreach ($gradient['GradientRecords'] as $gr) {
           $g->addNode(SVG::newElement('stop')
               ->set('offset', ($gr['Ratio'] / 255 * 100) . "%")

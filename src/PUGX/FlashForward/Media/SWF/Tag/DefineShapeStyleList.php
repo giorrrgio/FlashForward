@@ -2,6 +2,8 @@
 
 namespace PUGX\FlashForward\Media\SWF\Tag;
 
+use PUGX\FlashForward\Media\SVG\Path;
+
 class DefineShapeStyleList
 {
     public
@@ -45,12 +47,12 @@ class DefineShapeStyleList
         $this->styles = array();
         if ($this->fillStyle0 > 0) {
             $style =$this->getFillStyle($this->fillStyle0);
-            if ($style instanceof Media_SVG_Path) $style->direction('+');
+            if ($style instanceof Path) $style->direction('+');
             $this->styles[] = $style;
         }
         if ($this->fillStyle1 > 0) {
             $style = $this->getFillStyle($this->fillStyle1);
-            if ($style instanceof Media_SVG_Path) $style->direction('-');
+            if ($style instanceof Path) $style->direction('-');
             $this->styles[] = $style;
         }
         if ($this->lineStyle > 0) {
@@ -63,21 +65,21 @@ class DefineShapeStyleList
     public function moveTo($x, $y)
     {
         foreach ($this->styles as $style) {
-            if ($style instanceof Media_SVG_Path)
+            if ($style instanceof Path)
                 $style->moveTo($x, $y);
         }
     }
     public function closePath()
     {
         foreach ($this->styles as $style) {
-            if ($style instanceof Media_SVG_Path)
+            if ($style instanceof Path)
                 $style->closePath();
         }
     }
     public function lineTo($x, $y)
     {
         foreach ($this->styles as $style) {
-            if ($style instanceof Media_SVG_Path)
+            if ($style instanceof Path)
                 $style->lineTo($x, $y);
         }
     }
@@ -85,7 +87,7 @@ class DefineShapeStyleList
     public function curveTo($cx, $cy, $x, $y)
     {
         foreach ($this->styles as $style) {
-            if ($style instanceof Media_SVG_Path)
+            if ($style instanceof Path)
                 $style->curveTo($cx, $cy, $x, $y);
         }
     }
