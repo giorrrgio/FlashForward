@@ -30,7 +30,7 @@ class Stage extends DisplayObjectContainer
     $this->parse($reader);
   }
 
-  public function getHeasers()
+  public function getHeaders()
   {
     return $this->_headers;
   }
@@ -93,7 +93,7 @@ class Stage extends DisplayObjectContainer
     return null;
   }
 
-  public function parse($reader)
+  public function parse(Parser $reader)
   {
     $this->_headers = $reader->getSWFHeader();
     parent::parse($reader);

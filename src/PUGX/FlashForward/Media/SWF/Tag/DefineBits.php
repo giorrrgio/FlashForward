@@ -20,7 +20,7 @@ class DefineBits extends Tag
     return "defines/".$this->getGroupName().$this->getElementIdString().'.'.$this->filetype;
   }
 
-  public function parse(Bit $reader)
+  public function parse(Parser $reader)
   {
     $this->_fields = array(
       'CharacterId'  => $reader->getUI16LE(), // ShapeId

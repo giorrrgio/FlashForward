@@ -24,7 +24,7 @@ class DefineText extends Tag
     }
   }
 
-  public function parse($reader)
+  public function parse(Parser $reader)
   {
     $this->_fields['CharacterId'] = $reader->getUI16LE();
     $this->_fields['TextBounds'] = $reader->getRect();
