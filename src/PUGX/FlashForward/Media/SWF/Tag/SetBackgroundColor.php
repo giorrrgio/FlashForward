@@ -7,10 +7,10 @@ use PUGX\FlashForward\Media\SWF\Tag;
 
 class SetBackgroundColor extends Tag
 {
-  public function parse(Parser $reader)
-  {
-    $this->_fields['BackgroundColor'] = $reader->getRGB();
-    $this->reset($reader);
-    parent::parse($reader);
-  }
+    public function parse(Parser $reader)
+    {
+        $this->_fields['BackgroundColor'] = $reader->getRGB();
+        $this->reset($reader);
+        parent::parse($reader);
+    }
 }

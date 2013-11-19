@@ -4,38 +4,40 @@ namespace PUGX\FlashForward\Media\SWF;
 
 class Bitmap
 {
-  protected 
-    $code,
-    $content,
-    $image_file;
+    protected
+        $code,
+        $content,
+        $image_file;
 
-  public function __construct($image_file = null)
-  {
-    $this->setImageFile($image_file);
-  }
+    public function __construct($image_file = null)
+    {
+        $this->setImageFile($image_file);
+    }
 
-  public function setImageFile($image_file)
-  {
-    $this->image_file = $image_file;
-  }
+    public function setImageFile($image_file)
+    {
+        $this->image_file = $image_file;
+    }
 
-  public function build() {}
+    public function build()
+    {
+    }
 
-  public function getTag($characterId)
-  {
-    return array('Code'        => $this->code, 
-                 'Length'      => strlen($this->content) + 2, 
-                 'CharacterId' => $characterId, 
-                 'Content'     => $this->content);
-  }
+    public function getTag($characterId)
+    {
+        return array('Code'        => $this->code,
+                     'Length'      => strlen($this->content) + 2,
+                     'CharacterId' => $characterId,
+                     'Content'     => $this->content);
+    }
 
-  public function getContent()
-  {
-    return $this->content;
-  }
+    public function getContent()
+    {
+        return $this->content;
+    }
 
-  public function getCode()
-  {
-    return $this->code;
-  }
+    public function getCode()
+    {
+        return $this->code;
+    }
 }

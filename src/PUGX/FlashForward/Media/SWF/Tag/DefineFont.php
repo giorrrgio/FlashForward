@@ -7,12 +7,12 @@ use PUGX\FlashForward\Media\SWF\Tag;
 
 class DefineFont extends Tag
 {
-  public function parse(Parser $reader)
-  {
-    $this->_fields = array(
-      'FontID' => $reader->getUI16LE(),
-    );
-    $this->reset($reader);
-    parent::parse($reader);
-  }
+    public function parse(Parser $reader)
+    {
+        $this->_fields = array(
+            'FontID' => $reader->getUI16LE(),
+        );
+        $this->reset($reader);
+        parent::parse($reader);
+    }
 }

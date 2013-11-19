@@ -7,12 +7,12 @@ use PUGX\FlashForward\Media\SWF\Tag;
 
 class FrameLabel extends Tag
 {
-  public function parse(Parser $reader)
-  {
-    $this->_fields = array(
-      'Name' => $reader->getString(),
-    );
-    $this->reset($reader);
-    parent::parse($reader);
-  }
+    public function parse(Parser $reader)
+    {
+        $this->_fields = array(
+            'Name' => $reader->getString(),
+        );
+        $this->reset($reader);
+        parent::parse($reader);
+    }
 }
